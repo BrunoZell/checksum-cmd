@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 
 namespace Checksum
 {
@@ -14,10 +13,14 @@ namespace Checksum
 
         internal static int Main(Options options)
         {
-            string algorithmName = options.Algorithm.ToString().ToUpperInvariant();
-            using (var hashAlgorithm = HashAlgorithm.Create(algorithmName)) {
+            using (var hashAlgorithm = AlgorithmFactory.ResolveAlgorithm(options.Algorithm)) {
                 using (var file = File.OpenRead(options.FileName)) {
-                    Console.WriteLine(hashAlgorithm.ComputeHash(file));
+                    byte[] hash = hashAlgorithm.ComputeHash(file);
+                    string hex = BitConverter.ToString(hash)
+                        .Replace("-", String.Empty)
+                        .ToLowerInvariant();
+
+                    Console.WriteLine(hex);
                     return 0;
                 }
             }

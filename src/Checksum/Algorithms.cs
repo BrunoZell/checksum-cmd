@@ -6,8 +6,6 @@
         SHA256,
         SHA384,
         SHA512,
-        MACTripleDES,
-        MD5,
-        RIPEMD160
+        MD5
     }
 }
