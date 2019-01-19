@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Checksum.Exceptions;
+using System;
 using System.Security.Cryptography;
 
 namespace Checksum
@@ -7,6 +8,9 @@ namespace Checksum
     {
         public static HashAlgorithm ResolveAlgorithm(string name)
         {
+            if (String.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("No hash algorithm name specified", nameof(name));
+
             switch (name.ToUpperInvariant()) {
                 case "SHA1":
                     return SHA1.Create();
@@ -19,7 +23,7 @@ namespace Checksum
                 case "MD5":
                     return MD5.Create();
                 default:
-                    throw new NotSupportedException("The specified hash algorithm is not supported.");
+                    throw new AlgorithmNotSupportedException(name);
             }
         }
     }
