@@ -20,3 +20,12 @@ Currently the following hash algorithms are supported:
 - MD5
 
 **Feel free to contribute and add to the list!**
+
+## Build
+
+In the project directory, you can build this project specifically for your environment so it will even run on computers where you don't have the .Net-Core runtime installed:
+
+```
+> dotnet publish -c Release -r win10-x64
+> dotnet publish -c Release -r ubuntu.16.10-x64
+```
