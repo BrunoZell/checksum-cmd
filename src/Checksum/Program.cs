@@ -18,6 +18,11 @@ namespace Checksum
 
         internal static int Main(Options options)
         {
+            if (!File.Exists(options.FileName)) {
+                Console.Error.WriteLine($"File {options.FileName} does not exists.");
+                return 1;
+            }
+
             using (var hashAlgorithm = AlgorithmFactory.ResolveAlgorithm(options.Algorithm)) {
                 using (var file = File.OpenRead(options.FileName)) {
                     byte[] hash = hashAlgorithm.ComputeHash(file);
