@@ -31,6 +31,13 @@ namespace Checksum
             }
         }
 
-        internal static int HandleErrors(IEnumerable<Error> errs) => 1;
+        internal static int HandleErrors(IEnumerable<Error> errors)
+        {
+            foreach (var error in errors) {
+                Console.WriteLine(error.Tag);
+            }
+
+            return 1;
+        }
     }
 }
