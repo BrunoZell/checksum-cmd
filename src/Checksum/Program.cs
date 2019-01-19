@@ -15,9 +15,10 @@ namespace Checksum
         private static Parser BuildParser() =>
             new Parser(options => {
                 options.CaseInsensitiveEnumValues = true;
+                options.AutoHelp = true;
             });
 
-        internal static int Main(Options options)
+        private static int Main(Options options)
         {
             try {
                 if (!File.Exists(options.FileName)) {
@@ -25,34 +26,37 @@ namespace Checksum
                     return 1;
                 }
 
-                using (var hashAlgorithm = AlgorithmFactory.ResolveAlgorithm(options.Algorithm)) {
-                    using (var file = File.OpenRead(options.FileName)) {
-                        byte[] hash = hashAlgorithm.ComputeHash(file);
-                        string hex = BitConverter.ToString(hash)
-                            .Replace("-", String.Empty)
-                            .ToLowerInvariant();
-
-                        Console.WriteLine(hex);
-                        return 0;
-                    }
-                }
+                return PrintHash(options);
             } catch (AlgorithmNotSupportedException ex) {
-                Console.WriteLine(ex.Message);
+                Console.Error.WriteLine(ex.Message);
                 return 1;
             } catch (Exception) {
-                Console.WriteLine("An error occurred.");
+                Console.Error.WriteLine("An error occurred.");
                 return 1;
             }
         }
 
-        internal static int HandleErrors(IEnumerable<Error> errors)
+        private static int PrintHash(Options options)
         {
-            Console.WriteLine("Command line arguments cannot be parsed:");
+            using (var hashAlgorithm = AlgorithmFactory.ResolveAlgorithm(options.Algorithm)) {
+                using (var file = File.OpenRead(options.FileName)) {
+                    byte[] hash = hashAlgorithm.ComputeHash(file);
+                    string hex = BitConverter.ToString(hash)
+                        .Replace("-", String.Empty)
+                        .ToLowerInvariant();
 
-            foreach (var error in errors) {
-                Console.WriteLine(error.Tag);
+                    Console.WriteLine(hex);
+                    return 0;
+                }
             }
+        }
 
+        private static int HandleErrors(IEnumerable<Error> errors)
+        {
+            Console.Error.WriteLine("Command line arguments invalid. Usage example:");
+            Console.Error.WriteLine("> chksm sha1 file.exe");
+            Console.Error.WriteLine("Supported hash algorithms: SHA1, SHA256, SHA384, SHA512, MD5");
+            Console.Error.WriteLine("Visit https://github.com/BrunoZell/checksum-cmd for more information.");
             return 1;
         }
     }
