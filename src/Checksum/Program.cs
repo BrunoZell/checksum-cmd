@@ -8,8 +8,13 @@ namespace Checksum
     public partial class Program
     {
         public static int Main(string[] args) =>
-            Parser.Default.ParseArguments<Options>(args)
+            BuildParser().ParseArguments<Options>(args)
               .MapResult(Main, HandleErrors);
+
+        private static Parser BuildParser() =>
+            new Parser(options => {
+                options.CaseInsensitiveEnumValues = true;
+            });
 
         internal static int Main(Options options)
         {
