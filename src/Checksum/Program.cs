@@ -10,7 +10,7 @@ namespace Checksum
     {
         public static int Main(string[] args) =>
             BuildParser().ParseArguments<Options>(args)
-              .MapResult(Main, HandleErrors);
+              .MapResult(ParsedMain, HandleErrors);
 
         private static Parser BuildParser() =>
             new Parser(options => {
@@ -18,7 +18,7 @@ namespace Checksum
                 options.AutoHelp = true;
             });
 
-        private static int Main(Options options)
+        private static int ParsedMain(Options options)
         {
             try {
                 if (!File.Exists(options.FileName)) {
