@@ -5,18 +5,18 @@ namespace Checksum
 {
     internal static class AlgorithmFactory
     {
-        public static HashAlgorithm ResolveAlgorithm(Algorithms algorithm)
+        public static HashAlgorithm ResolveAlgorithm(string name)
         {
-            switch (algorithm) {
-                case Algorithms.SHA1:
+            switch (name.ToUpperInvariant()) {
+                case "SHA1":
                     return SHA1.Create();
-                case Algorithms.SHA256:
+                case "SHA256":
                     return SHA256.Create();
-                case Algorithms.SHA384:
+                case "SHA384":
                     return SHA384.Create();
-                case Algorithms.SHA512:
+                case "SHA512":
                     return SHA512.Create();
-                case Algorithms.MD5:
+                case "MD5":
                     return MD5.Create();
                 default:
                     throw new NotSupportedException("The specified hash algorithm is not supported.");
